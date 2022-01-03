@@ -2,9 +2,6 @@
 
 This is a sample Flask application to show rows from a data frame.
 
-![Image of frontpage](https://sinafathi.com/wp-content/uploads/2020/06/search-266x300.png)
-![Image of result](https://sinafathi.com/wp-content/uploads/2020/06/result-300x203.png)
-
 ## Summary
 
   - [Getting Started](#getting-started)

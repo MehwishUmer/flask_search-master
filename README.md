@@ -19,9 +19,8 @@ your local machine for development and testing purposes.
 
 ## Authors
 
-  - **Sina Fathi-Kazerooni** - *Provided the whole package* -
-    [Website](https://sinafathi.com)
-
+  - **Mahwish Umer** - *Provided the whole package* -
+    
 
 ## License
 

@@ -1,0 +1,6 @@
+wheel
+Flask
+Flask-WTF
+flask-bootstrap
+pandas
+numpy

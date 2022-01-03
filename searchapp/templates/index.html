@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+<div class="container">
+    <h3>Search for a value in column a</h3>
+    <br/>
+    <br/>
+<form action="" method="post" novalidate>
+    <div class="form-group">
+    {{ form.hidden_tag() }}
+    <div class="form-row">
+        <label for="title">{{ form.title.label }}</label>
+        <input type="text" class="form-control" id="title" name="title" placeholder="">
+    </div>
+    <div class="form-row">
+        <label for="author">{{ form.author.label }}</label>
+        <input type="text" class="form-control" id="author" name="author" placeholder="">
+    </div>
+    <div class="form-row">
+        <label for="book">{{ form.book.label }}</label>
+        <input type="text" class="form-control" id="book" name="book" placeholder="">
+    </div>
+    <div class="form-row">
+        <label for="words">{{ form.words.label }}</label>
+        <input type="text" class="form-control" id="words" name="words" placeholder="">
+    </div>
+        {% for error in form.title.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+        <button type="submit" class="btn btn-success" style="align-self: center">Search</button>
+    </div>
+</form>
+
+{% if noresult %}
+
+    <span style="color: red;">No Data Found!</span>
+{% elif result %}
+
+<span style="color: green;">Showing Result of {{ resultlabel }}</span>
+<table class="table table-striped">
+<tr>
+    <thead class="thead-light">
+        <tr>
+            {% for col in column_names %}
+            <th scope="col">{{col}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+        {% for row in result %}
+        <tr>
+        {% for col, row in zip(column_names, row) %}
+        <td ><p>{{row}}</p></td>
+        {% endfor %}
+        </tr>
+        {% endfor %}
+</table>
+
+{% else %}
+<table class="table table-striped">
+<tr>
+    <thead class="thead-light">
+        <tr>
+            {% for col in column_names %}
+            <th scope="col">{{col}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    {% for row in df %}
+    <tr>
+    {% for col, row in zip(column_names, row) %}
+    <td ><p>{{row}}</p></td>
+    {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+{% endblock %}
+
+
+

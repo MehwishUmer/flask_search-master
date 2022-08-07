@@ -5,4 +5,4 @@
 from searchapp import searchapp
 
 if __name__ == "__main__":
-    searchapp.run(host="https://search.au-syd.cf.appdomain.cloud", port=int("5000"), debug=True)
+    searchapp.run(host="https://mysearch.au-syd.cf.appdomain.cloud", port=int("5000"), debug=True)

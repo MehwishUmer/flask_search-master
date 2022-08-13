@@ -13,18 +13,7 @@
         <label for="title">{{ form.title.label }}</label>
         <input type="text" class="form-control" id="title" name="title" placeholder="">
     </div>
-    <div class="form-row">
-        <label for="author">{{ form.author.label }}</label>
-        <input type="text" class="form-control" id="author" name="author" placeholder="">
-    </div>
-    <div class="form-row">
-        <label for="book">{{ form.book.label }}</label>
-        <input type="text" class="form-control" id="book" name="book" placeholder="">
-    </div>
-    <div class="form-row">
-        <label for="words">{{ form.words.label }}</label>
-        <input type="text" class="form-control" id="words" name="words" placeholder="">
-    </div>
+    
         {% for error in form.title.errors %}
         <span style="color: red;">[{{ error }}]</span>
         {% endfor %}

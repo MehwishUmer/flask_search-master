@@ -5,6 +5,8 @@
 from flask import render_template, flash, url_for
 from searchapp import searchapp
 from searchapp.forms import query_form
+from nltk.corpus import stopwords
+en_stops = set(stopwords.words('english'))
 
 import numpy as np
 import pandas as pd
@@ -17,10 +19,7 @@ arr = arr.astype('str')
 # df = pd.DataFrame(arr, columns=['a', 'b', 'c', 'd', 'e'])
 
 df = pd.read_csv('Corpus.csv')
-df2 = pd.read_csv('TitleInvertedIndex.csv')
-df3 = pd.read_csv('AuthorInvertedIndex.csv')
-df4= pd.read_csv('BookInvertedIndex.csv')
-df5= pd.read_csv('WordsInvertedIndex.csv')
+df2 = pd.read_csv('CorpusInvertedIndex.csv')
 
 sb_stemmer = SnowballStemmer("english",)
 @searchapp.route('/', methods=['GET', 'POST'])
@@ -33,65 +32,25 @@ def index():
 	label=""
 	if form.validate_on_submit(): # To check info when user inputs value into the form
 		try:
-			q = form.title.data
-			if(q!=""):
-				
-				indexes=df2.loc[df2['Title'] == sb_stemmer.stem(str(q))].iloc[0]["Indexes"]
-				indexes=re.findall('\'(.*?)\'', indexes)
-				indexes=[int(i) for i in indexes]
-				newDf=df[df['Index'].isin(np.array(indexes))]
-				
-				newDf['frequency'] = newDf.apply(
-    			lambda row: indexes.count(row.Index), axis=1)
-				
-				newDf=newDf.sort_values(by='frequency', ascending=False)
-				row=newDf.values.tolist()
-				label="Title `"+q+ "` in "+str(len(row)) +" documents, "
+			ii = form.title.data
+			for q in ii.split():
+				if(q!="" and q not in en_stops):
+					
+					indexes=df2.loc[df2['keyword'] == sb_stemmer.stem(str(q))].iloc[0]["Indexes"]
+					indexes=re.findall('\'(.*?)\'', indexes)
+					indexes=[int(i) for i in indexes]
+					if(len(newDf)==0):
+						newDf=df[df['Index'].isin(np.array(indexes))]
+					else:
+						newDf=newDf[newDf['Index'].isin(np.array(indexes))]
+					
+					newDf['ranking'] = newDf.apply(
+					lambda row: indexes.count(row.Index), axis=1)
+					
+					newDf=newDf.sort_values(by='ranking', ascending=False)
+					row=newDf.values.tolist()
+			label="Title `"+ii+ "` in "+str(len(row)) +" documents, "
 			
-			q2 = form.author.data
-			if(q2!=""):
-				indexes=df3.loc[df3['Author'] == sb_stemmer.stem(str(q2))].iloc[0]["Indexes"]
-				indexes=re.findall('\'(.*?)\'', indexes)
-				indexes=[int(i) for i in indexes]
-				newDf = newDf[newDf['Index'].isin(np.array(indexes))]
-				
-				newDf['frequency'] = newDf.apply(
-    			lambda row: indexes.count(row.Index), axis=1)
-
-				
-				newDf=newDf.sort_values(by='frequency', ascending=False)
-				row=newDf.values.tolist()
-			
-				label+="Author `"+q2 +"` in "+str(len(row)) +" documents, "
-			q3 = form.book.data
-			if(q3!=""):
-				indexes=df4.loc[df4['Book'] == sb_stemmer.stem(str(q3))].iloc[0]["Indexes"]
-				indexes=re.findall('\'(.*?)\'', indexes)
-				indexes=[int(i) for i in indexes]
-				newDf = newDf[newDf['Index'].isin(np.array(indexes))]
-				
-				newDf['frequency'] = newDf.apply(
-    			lambda row: indexes.count(row.Index), axis=1)
-				
-				newDf=newDf.sort_values(by='frequency', ascending=False)
-				row=newDf.values.tolist()
-
-				label+="Book `"+q3 +"` in "+str(len(row)) +" documents, "
-			
-			q4 = form.words.data
-			if(q4!=""):
-				indexes=df5.loc[df5['Word'] == sb_stemmer.stem(str(q4))].iloc[0]["Indexes"]
-				indexes=re.findall('\'(.*?)\'', indexes)
-				indexes=[int(i) for i in indexes]
-				newDf = newDf[newDf['Index'].isin(np.array(indexes))]
-				
-				newDf['frequency'] = newDf.apply(
-    			lambda row: indexes.count(row.Index), axis=1)
-				
-				newDf=newDf.sort_values(by='frequency', ascending=False)
-				row=newDf.values.tolist()
-				
-				label+="Word `"+q4+"` in "+str(len(row)) +" documents"
 			
 		except:
 			return render_template('index.html', form=form,		
